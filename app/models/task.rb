@@ -1,6 +1,7 @@
 class Task < ApplicationRecord
   has_one_attached :image
   validates :name, presence: true, length: { maximum: 30 }
+  validate :due_date_cannot_be_in_the_past
   validate :validate_name_not_including_comma
   belongs_to :user
 
@@ -38,5 +39,9 @@ class Task < ApplicationRecord
 
   def validate_name_not_including_comma
     errors.add(:name, "にカンマを含めることはできません") if name&.include?(",")
+  end
+
+  def due_date_cannot_be_in_the_past
+    errors.add(:due_date, "に過去の日付は指定できません") if due_date&.past?
   end
 end
