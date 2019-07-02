@@ -11,6 +11,10 @@ h1 登録内容の確認
         th= Task.human_attribute_name(:description)
         td= simple_format(@task.description)
         = f.hidden_field :description
+      tr
+        th= Task.human_attribute_name(:due_date)
+        td= @task.due_date
+        = f.hidden_field :due_date
   / キャプション("戻る")は変化しやすいので、nameを活用しnameの値の有無によって戻るかどうかをコントローラ内で区別する
   = f.submit "戻る", name: "back", class: "btn btn-secondary mr-3"
   = f.submit "登録", class: "btn btn-primary"
