@@ -3,7 +3,7 @@ require "rails_helper"
 describe "タスク管理機能", type: :system do
   let(:user_a) { FactoryBot.create(:user, name: "ユーザーA", email: "a@example.com") }
   let(:user_b) { FactoryBot.create(:user, name: "ユーザーB", email: "b@example.com") }
-  let!(:task_a) { FactoryBot.create(:task, name: "最初のタスク", user: user_a) }
+  let!(:task_a) { FactoryBot.create(:task, name: "最初のタスク", user: user_a, created_at: Time.zone.now) }
 
   before do
     visit login_path
@@ -29,6 +29,24 @@ describe "タスク管理機能", type: :system do
       it "ユーザーAが作成したタスクが表示されない" do
         expect(page).to have_no_content "最初のタスク"
       end
+    end
+
+    describe "タスク表示順" do
+      let(:login_user) { user_a }
+
+      before do
+        FactoryBot.create(:task, name: "2番目のタスク", user: user_a, created_at: 1.day.since)
+        FactoryBot.create(:task, name: "3番目のタスク", user: user_a, created_at: 2.day.since)
+      end
+
+      it "作成日の降順で表示される" do
+        visit tasks_path
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
+        end
+      end
+
     end
   end
 
