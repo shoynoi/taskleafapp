@@ -71,4 +71,62 @@ describe "タスク管理機能", type: :system do
       end
     end
   end
+
+  describe "編集機能" do
+    let(:login_user) { user_a }
+
+    before do
+      visit edit_task_path(task_a)
+      fill_in "名称", with: task_name
+      click_button "更新する"
+    end
+
+    context "編集画面で名称を入力したとき" do
+      let(:task_name) { "タスクの更新をする" }
+
+      it "正常に更新される" do
+        expect(page).to have_selector ".alert-success", text: "タスクの更新をする"
+      end
+    end
+
+    context "編集画面で名称を空欄にしたとき" do
+      let(:task_name) { "" }
+
+      it "エラーになる" do
+        within "#error_explanation" do
+          expect(page).to have_content "名称を入力してください"
+        end
+      end
+    end
+  end
+
+  describe "削除機能" do
+    let(:login_user) { user_a }
+
+    describe "tasks#index" do
+      before do
+        visit tasks_path
+        within "#task-#{task_a.id}" do
+          click_link "削除"
+        end
+        page.driver.browser.switch_to.alert.accept
+      end
+
+      it "タスクが削除される" do
+        expect(page).to have_content "タスク「最初のタスク」を削除しました。"
+      end
+    end
+
+    describe "tasks#show" do
+      before do
+        visit task_path(task_a)
+        click_link "削除"
+        page.driver.browser.switch_to.alert.accept
+      end
+
+      it "タスクが削除される" do
+        expect(page).to have_content "タスク「最初のタスク」を削除しました。"
+      end
+    end
+  end
 end
