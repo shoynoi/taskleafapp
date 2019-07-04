@@ -39,13 +39,13 @@ describe "タスク管理機能", type: :system do
         FactoryBot.create(:task, name: "3番目のタスク", user: user_a, created_at: 1.day.ago, due_date: 1.week.since)
       end
 
-        it "作成日の降順で表示される" do
-          visit tasks_path
-          within "tbody" do
-            task_titles = all(".task_name").map(&:text)
-            expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
-          end
+      it "作成日の降順で表示される" do
+        visit tasks_path
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
         end
+      end
 
       context "終了期日でソートしたとき" do
         it "終了期日の昇順でソートされる" do
@@ -66,7 +66,6 @@ describe "タスク管理機能", type: :system do
           end
         end
       end
-
     end
   end
 
