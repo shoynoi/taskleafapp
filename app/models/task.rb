@@ -6,6 +6,8 @@ class Task < ApplicationRecord
   belongs_to :user
 
   scope :recent, -> { order(created_at: :desc) }
+  scope :sort_by_due_date_not_null_asc, -> { order("due_date ASC NULLS LAST") }
+  scope :sort_by_due_date_not_null_desc, -> { order("due_date DESC NULLS LAST") }
 
   def self.csv_attributes
     %w[name description created_at updated_at]
@@ -29,7 +31,7 @@ class Task < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[name created_at]
+    %w[name created_at due_date]
   end
 
   def self.ransackable_association(auth_oabject = nil)

@@ -21,8 +21,8 @@ h1 タスク一覧
 table.table.table-hover
   thead.thead-default
     tr
-      th= sort_link(@q, :name, default_order: :desc)
-      th= Task.human_attribute_name(:due_date)
+      th= sort_link(@q, :name)
+      th= sort_link(@q, :due_date_not_null, "期日")
       th= Task.human_attribute_name(:created_at)
       th
   tbody
