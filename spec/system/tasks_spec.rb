@@ -3,7 +3,7 @@ require "rails_helper"
 describe "タスク管理機能", type: :system do
   let(:user_a) { FactoryBot.create(:user, name: "ユーザーA", email: "a@example.com") }
   let(:user_b) { FactoryBot.create(:user, name: "ユーザーB", email: "b@example.com") }
-  let!(:task_a) { FactoryBot.create(:task, name: "最初のタスク", user: user_a, created_at: Time.zone.now) }
+  let!(:task_a) { FactoryBot.create(:task, name: "最初のタスク", user: user_a, created_at: 3.day.ago, due_date: 3.week.since) }
 
   before do
     visit login_path
@@ -35,15 +35,35 @@ describe "タスク管理機能", type: :system do
       let(:login_user) { user_a }
 
       before do
-        FactoryBot.create(:task, name: "2番目のタスク", user: user_a, created_at: 1.day.since)
-        FactoryBot.create(:task, name: "3番目のタスク", user: user_a, created_at: 2.day.since)
+        FactoryBot.create(:task, name: "2番目のタスク", user: user_a, created_at: 2.day.ago, due_date: 2.week.since)
+        FactoryBot.create(:task, name: "3番目のタスク", user: user_a, created_at: 1.day.ago, due_date: 1.week.since)
       end
 
-      it "作成日の降順で表示される" do
-        visit tasks_path
-        within "tbody" do
-          task_titles = all(".task_name").map(&:text)
-          expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
+        it "作成日の降順で表示される" do
+          visit tasks_path
+          within "tbody" do
+            task_titles = all(".task_name").map(&:text)
+            expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
+          end
+        end
+
+      context "終了期日でソートしたとき" do
+        it "終了期日の昇順でソートされる" do
+          visit tasks_path
+          click_link "期日"
+          within "tbody" do
+            task_titles = all(".task_name").map(&:text)
+            expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
+          end
+        end
+
+        it "終了期日の降順でソートされる" do
+          click_link "期日"
+          click_link "期日"
+          within "tbody" do
+            task_titles = all(".task_name").map(&:text)
+            expect(task_titles).to eq %w(最初のタスク 2番目のタスク 3番目のタスク)
+          end
         end
       end
 
