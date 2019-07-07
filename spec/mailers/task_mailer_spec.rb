@@ -2,7 +2,8 @@ require "rails_helper"
 
 describe TaskMailer, type: :mailer do
 
-  let(:task) { FactoryBot.create(:task, name: "メイラーSpecを書く", description: "送信したメールの内容を確認します") }
+  let(:user_a) { FactoryBot.create(:user, name: "ユーザーA", email: "a@example.com") }
+  let(:task) { FactoryBot.create(:task, name: "メイラーSpecを書く", description: "送信したメールの内容を確認します", user: user_a) }
 
   let(:text_body) do
     part = mail.body.parts.detect { |part| part.content_type == "text/plain; charset=UTF-8" }
@@ -14,12 +15,12 @@ describe TaskMailer, type: :mailer do
   end
 
   describe "#creation_email" do
-    let(:mail) { TaskMailer.creation_email(task) }
+    let(:mail) { TaskMailer.creation_email(task, user_a) }
 
     it "想定どおりのメールが生成されている" do
       # ヘッダ
       expect(mail.subject).to eq("タスク作成完了メール")
-      expect(mail.to).to eq(["user@example.com"])
+      expect(mail.to).to eq([user_a.email])
       expect(mail.from).to eq(["taskleaf@example.com"])
 
 
