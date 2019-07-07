@@ -1,10 +1,13 @@
 class Task < ApplicationRecord
   has_one_attached :image
   validates :name, presence: true, length: { maximum: 30 }
+  validate :due_date_cannot_be_in_the_past
   validate :validate_name_not_including_comma
   belongs_to :user
 
   scope :recent, -> { order(created_at: :desc) }
+  scope :sort_by_due_date_not_null_asc, -> { order("due_date ASC NULLS LAST") }
+  scope :sort_by_due_date_not_null_desc, -> { order("due_date DESC NULLS LAST") }
 
   def self.csv_attributes
     %w[name description created_at updated_at]
@@ -28,7 +31,7 @@ class Task < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[name created_at]
+    %w[name created_at due_date]
   end
 
   def self.ransackable_association(auth_oabject = nil)
@@ -38,5 +41,9 @@ class Task < ApplicationRecord
 
   def validate_name_not_including_comma
     errors.add(:name, "にカンマを含めることはできません") if name&.include?(",")
+  end
+
+  def due_date_cannot_be_in_the_past
+    errors.add(:due_date, "に過去の日付は指定できません") if due_date&.past?
   end
 end
