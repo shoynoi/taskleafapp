@@ -1,7 +1,9 @@
 class Task < ApplicationRecord
   has_one_attached :image
+  enum status: { pending: 0, doing: 1, done: 2 }
   validates :name, presence: true, length: { maximum: 30 }
-  validate :due_date_cannot_be_in_the_past
+  validates :status, inclusion: { in: Task.statuses.keys }
+  validate :due_date_cannot_be_in_the_past, if: :new_or_due_date_changed?
   validate :validate_name_not_including_comma
   belongs_to :user
 
@@ -34,7 +36,7 @@ class Task < ApplicationRecord
     %w[name created_at due_date]
   end
 
-  def self.ransackable_association(auth_oabject = nil)
+  def self.ransackable_association(auth_object = nil)
     []
   end
   private
@@ -45,5 +47,9 @@ class Task < ApplicationRecord
 
   def due_date_cannot_be_in_the_past
     errors.add(:due_date, "に過去の日付は指定できません") if due_date&.past?
+  end
+
+  def new_or_due_date_changed?
+    new_record? || will_save_change_to_due_date?
   end
 end
