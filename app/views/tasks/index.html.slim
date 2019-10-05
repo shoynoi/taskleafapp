@@ -24,13 +24,16 @@ table.table.table-hover
       th= sort_link(@q, :name)
       th= sort_link(@q, :due_date_not_null, "期日")
       th= Task.human_attribute_name(:created_at)
+      th= Task.human_attribute_name(:status)
       th
   tbody
     - @tasks.each do |task|
       tr id="task-#{task.id}"
         td.task_name= link_to task.name, task
         td= task.due_date
+        - status = task.status
         td= task.created_at
+        td.js-task-status(data-task-id="#{task.id}" data-status="#{status}")
         td
           = link_to "編集", edit_task_path(task), class: "btn btn-primary mr-3"
           = link_to "削除", task, method: :delete, data: { confirm: "タスク「#{task.name}」を削除します。よろしいですか?" }, class: "btn btn-danger delete"

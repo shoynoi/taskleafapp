@@ -17,6 +17,9 @@ table.table.table-hover
       th= Task.human_attribute_name(:due_date)
       td= @task.due_date
     tr
+      th= Task.human_attribute_name(:status)
+      td= t("activerecord.enums.tasks.status.#{@task.status}")
+    tr
       th= Task.human_attribute_name(:image)
       td= image_tag @task.image if @task.image.attached?
     tr
