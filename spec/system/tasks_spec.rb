@@ -83,6 +83,54 @@ describe "タスク管理機能", type: :system do
         expect(task_a.reload.status).to eq "doing"
       end
     end
+
+    describe "タスク検索機能" do
+      let(:login_user) { user_a }
+
+      before do
+        FactoryBot.create(:task, name: "りんごを買う", user: user_a, status: 0, created_at: Time.zone.parse('2019-10-10 15:15:15'))
+        FactoryBot.create(:task, name: "バナナを買う", user: user_a, status: 1, created_at: Time.zone.parse('2019-09-10 15:15:15'))
+      end
+
+      it "タスク名の部分一致で検索ができること" do
+        visit tasks_path
+        fill_in "タスク名", with: "買う"
+        click_button "検索"
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to contain_exactly("りんごを買う", "バナナを買う")
+        end
+      end
+      it "タスクの登録日時で検索ができること" do
+        visit tasks_path
+        fill_in "登録日時", with: Time.zone.parse('2019-10-10')
+        click_button "検索"
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to eq %w(りんごを買う)
+        end
+      end
+      it "タスクのステータスで検索ができること" do
+        visit tasks_path
+        select "着手中", from: "ステータス"
+        click_button "検索"
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to eq %w(バナナを買う)
+        end
+      end
+      it "タスク名、登録日時、ステータスで検索ができること" do
+        visit tasks_path
+        fill_in "タスク", with: "買う"
+        fill_in "登録日時", with: Time.zone.parse('2019-09-10')
+        select "着手中", from: "ステータス"
+        click_button "検索"
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to eq %w(バナナを買う)
+        end
+      end
+    end
   end
 
   describe "詳細表示機能" do
