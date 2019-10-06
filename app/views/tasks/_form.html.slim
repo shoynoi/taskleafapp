@@ -16,6 +16,9 @@
     = f.label :due_date
     = f.date_field :due_date, min: Date.today, class: "form-control", id: "task_due_date"
   .form-group
+    = f.label :priority
+    = f.select :priority, Task.priorities_i18n.invert, {}, class: "form-control"
+  .form-group
     = f.label :image
     = f.file_field :image, class: "form-control"
   = f.submit nil, class: "btn btn-primary"

@@ -1,8 +1,10 @@
 class Task < ApplicationRecord
   has_one_attached :image
   enum status: { pending: 0, doing: 1, done: 2 }
+  enum priority: { none: 0, low: 1, medium: 2, high: 3 }, _prefix: true
   validates :name, presence: true, length: { maximum: 30 }
   validates :status, inclusion: { in: Task.statuses.keys }
+  validates :priority, inclusion: { in: Task.priorities.keys }
   validate :due_date_cannot_be_in_the_past, if: :new_or_due_date_changed?
   validate :validate_name_not_including_comma
   belongs_to :user
@@ -33,7 +35,7 @@ class Task < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[name status created_at due_date]
+    %w[name status priority created_at due_date]
   end
 
   def self.ransackable_association(auth_object = nil)
