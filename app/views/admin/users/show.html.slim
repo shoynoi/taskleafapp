@@ -1,8 +1,7 @@
-h1 ユーザーの詳細
-
-.nav-justify-content-end
+.nav.justify-content-between.align-items-center.mt-4
+  h2 ユーザーの詳細
   = link_to "一覧", admin_users_path, class: "nav-link"
-table.table.table-hover
+table.table.bg-white.border
   tbody
     tr
       th= User.human_attribute_name(:id)

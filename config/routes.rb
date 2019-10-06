@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  namespace :api do
+    resources :tasks, only: [] do
+      resource :status, only: [:show, :update], controller: 'tasks/statuses'
+    end
+  end
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'

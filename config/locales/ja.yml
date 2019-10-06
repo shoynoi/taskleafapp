@@ -9,6 +9,7 @@ ja:
         image: 画像
         description: 詳しい説明
         due_date: 期日
+        status: ステータス
         created_at: 登録日時
         updated_at: 更新日時
       user:
@@ -19,3 +20,9 @@ ja:
         password_confirmation: パスワード(確認)
         created_at: 登録日時
         updated_at: 更新日時
+  enums:
+    task:
+      status:
+        pending: 未着手
+        doing: 着手中
+        done: 完了

@@ -1,8 +1,7 @@
-h1 タスクの詳細
-
-.nav.justify-content-end
+.nav.justify-content-between.align-items-center.mt-4
+  h2 タスクの詳細
   = link_to "一覧", tasks_path, class: "nav-link"
-table.table.table-hover
+table.table.bg-white.border
   tbody
     tr
       th= Task.human_attribute_name(:id)
@@ -16,6 +15,9 @@ table.table.table-hover
     tr
       th= Task.human_attribute_name(:due_date)
       td= @task.due_date
+    tr
+      th= Task.human_attribute_name(:status)
+      td= @task.status_i18n
     tr
       th= Task.human_attribute_name(:image)
       td= image_tag @task.image if @task.image.attached?

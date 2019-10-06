@@ -3,7 +3,7 @@ require "rails_helper"
 describe "タスク管理機能", type: :system do
   let(:user_a) { FactoryBot.create(:user, name: "ユーザーA", email: "a@example.com") }
   let(:user_b) { FactoryBot.create(:user, name: "ユーザーB", email: "b@example.com") }
-  let!(:task_a) { FactoryBot.create(:task, name: "最初のタスク", user: user_a, created_at: 3.day.ago, due_date: 3.week.since) }
+  let!(:task_a) { FactoryBot.create(:task, name: "最初のタスク", user: user_a, due_date: 1.day.since, created_at: 3.day.ago) }
 
   before do
     visit login_path
@@ -35,11 +35,11 @@ describe "タスク管理機能", type: :system do
       let(:login_user) { user_a }
 
       before do
-        FactoryBot.create(:task, name: "2番目のタスク", user: user_a, created_at: 2.day.ago, due_date: 2.week.since)
-        FactoryBot.create(:task, name: "3番目のタスク", user: user_a, created_at: 1.day.ago, due_date: 1.week.since)
+        FactoryBot.create(:task, name: "2番目のタスク", user: user_a, due_date: 2.day.since, created_at: 2.day.ago)
+        FactoryBot.create(:task, name: "3番目のタスク", user: user_a, due_date: 3.day.since, created_at: 1.day.ago)
       end
 
-      it "作成日の降順で表示される" do
+      it "デフォルトで作成日の降順で表示される" do
         visit tasks_path
         within "tbody" do
           task_titles = all(".task_name").map(&:text)
@@ -51,19 +51,83 @@ describe "タスク管理機能", type: :system do
         it "終了期日の昇順でソートされる" do
           visit tasks_path
           click_link "期日"
+          sleep 0.5
           within "tbody" do
             task_titles = all(".task_name").map(&:text)
-            expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
+            expect(task_titles).to eq %w(最初のタスク 2番目のタスク 3番目のタスク)
           end
         end
 
         it "終了期日の降順でソートされる" do
           click_link "期日"
+          sleep 0.5
           click_link "期日"
+          sleep 0.5
           within "tbody" do
             task_titles = all(".task_name").map(&:text)
-            expect(task_titles).to eq %w(最初のタスク 2番目のタスク 3番目のタスク)
+            expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
           end
+        end
+      end
+    end
+
+    describe "ステータス変更", js: true do
+      let(:login_user) { user_a }
+
+      it "ステータスの変更ができる" do
+        visit tasks_path
+        within "#task-#{task_a.id}" do
+          click_button "着手中"
+        end
+        sleep 0.5
+        expect(task_a.reload.status).to eq "doing"
+      end
+    end
+
+    describe "タスク検索機能" do
+      let(:login_user) { user_a }
+
+      before do
+        FactoryBot.create(:task, name: "りんごを買う", user: user_a, status: 0, created_at: Time.zone.parse('2019-10-10 15:15:15'))
+        FactoryBot.create(:task, name: "バナナを買う", user: user_a, status: 1, created_at: Time.zone.parse('2019-09-10 15:15:15'))
+      end
+
+      it "タスク名の部分一致で検索ができること" do
+        visit tasks_path
+        fill_in "タスク名", with: "買う"
+        click_button "検索"
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to contain_exactly("りんごを買う", "バナナを買う")
+        end
+      end
+      it "タスクの登録日時で検索ができること" do
+        visit tasks_path
+        fill_in "登録日時", with: Time.zone.parse('2019-10-10')
+        click_button "検索"
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to eq %w(りんごを買う)
+        end
+      end
+      it "タスクのステータスで検索ができること" do
+        visit tasks_path
+        select "着手中", from: "ステータス"
+        click_button "検索"
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to eq %w(バナナを買う)
+        end
+      end
+      it "タスク名、登録日時、ステータスで検索ができること" do
+        visit tasks_path
+        fill_in "タスク", with: "買う"
+        fill_in "登録日時", with: Time.zone.parse('2019-09-10')
+        select "着手中", from: "ステータス"
+        click_button "検索"
+        within "tbody" do
+          task_titles = all(".task_name").map(&:text)
+          expect(task_titles).to eq %w(バナナを買う)
         end
       end
     end
