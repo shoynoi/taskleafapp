@@ -84,12 +84,26 @@ describe "タスク管理機能", type: :system do
       end
     end
 
+    describe "優先度" do
+      let(:login_user) { user_a }
+
+      it "優先度の変更ができる" do
+        visit tasks_path
+        within "#task-#{task_a.id}" do
+          find("#test-view-priority").click
+          select "高", from: "test-select-priority"
+        end
+        sleep 0.5
+        expect(task_a.reload.priority).to eq "high"
+      end
+    end
+
     describe "タスク検索機能" do
       let(:login_user) { user_a }
 
       before do
-        FactoryBot.create(:task, name: "りんごを買う", user: user_a, status: 0, created_at: Time.zone.parse('2019-10-10 15:15:15'))
-        FactoryBot.create(:task, name: "バナナを買う", user: user_a, status: 1, created_at: Time.zone.parse('2019-09-10 15:15:15'))
+        FactoryBot.create(:task, name: "りんごを買う", user: user_a, status: 0, priority: 0, created_at: Time.zone.parse('2019-10-10 15:15:15'))
+        FactoryBot.create(:task, name: "バナナを買う", user: user_a, status: 1, priority: 3, created_at: Time.zone.parse('2019-09-10 15:15:15'))
       end
 
       it "タスク名の部分一致で検索ができること" do
@@ -119,11 +133,21 @@ describe "タスク管理機能", type: :system do
           expect(task_titles).to eq %w(バナナを買う)
         end
       end
-      it "タスク名、登録日時、ステータスで検索ができること" do
+      it "タスクの優先度で検索できること" do
+        visit tasks_path
+        select "高", from: "優先度"
+        click_button "検索"
+        within "tbody" do
+          tasks_titles = all(".task_name").map(&:text)
+          expect(tasks_titles).to eq %w(バナナを買う)
+        end
+      end
+      it "タスク名、登録日時、ステータス、優先度で検索ができること" do
         visit tasks_path
         fill_in "タスク", with: "買う"
         fill_in "登録日時", with: Time.zone.parse('2019-09-10')
         select "着手中", from: "ステータス"
+        select "高", from: "優先度"
         click_button "検索"
         within "tbody" do
           task_titles = all(".task_name").map(&:text)

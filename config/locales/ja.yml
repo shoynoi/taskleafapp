@@ -10,6 +10,7 @@ ja:
         description: 詳しい説明
         due_date: 期日
         status: ステータス
+        priority: 優先度
         created_at: 登録日時
         updated_at: 更新日時
       user:
@@ -26,3 +27,8 @@ ja:
         pending: 未着手
         doing: 着手中
         done: 完了
+      priority:
+        none: なし
+        low: 低
+        medium: 中
+        high: 高

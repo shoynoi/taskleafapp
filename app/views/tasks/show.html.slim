@@ -19,6 +19,9 @@ table.table.bg-white.border
       th= Task.human_attribute_name(:status)
       td= @task.status_i18n
     tr
+      th= Task.human_attribute_name(:priority)
+      td= @task.priority_i18n
+    tr
       th= Task.human_attribute_name(:image)
       td= image_tag @task.image if @task.image.attached?
     tr

@@ -4,12 +4,15 @@ header.page-header
     .form-group.col-md-6
       = f.label :name_cont, "タスク名"
       = f.search_field :name_cont, class: "form-control"
-    .form-group.col-md-3
+    .form-group.col-md-2
       = f.label :status_eq, "ステータス"
       = f.select :status_eq, Task.statuses.map { |k ,v| [Task.statuses_i18n[k], v] }, { include_blank: "すべて" }, class: "form-control"
     .form-group.col-md-3
       = f.label :created_at_gteq, "登録日時"
       = f.date_field :created_at_gteq, class: "form-control"
+    .form-group.col-md-1
+      = f.label :priority_eq, "優先度"
+      = f.select :priority_eq, Task.priorities.map{ |k, v| [Task.priorities_i18n[k], v] }, { include_blank: "すべて" }, class: "form-control"
   = f.submit class: "btn btn-outline-primary"
 
 
@@ -23,18 +26,21 @@ table.table.bg-white.border
       th= sort_link(@q, :due_date_not_null, "期日")
       th= Task.human_attribute_name(:created_at)
       th= Task.human_attribute_name(:status)
+      th= sort_link(@q, :priority, "優先度")
       th
   tbody
     - @tasks.each do |task|
       tr id="task-#{task.id}"
-        td.task_name= link_to task.name, task
+        td.task_name
+          .task-name__link = link_to task.name, task
         td= task.due_date
-        - status = task.status
         td= task.created_at
+        - status = task.status
         td.js-task-status(data-task-id="#{task.id}" data-status="#{status}")
+        td.js-task-priority(data-task-id="#{task.id}" data-priority="#{task.priority}")
         td
-          = link_to "編集", edit_task_path(task), class: "btn btn-primary mr-3"
-          = link_to "削除", task, method: :delete, data: { confirm: "タスク「#{task.name}」を削除します。よろしいですか?" }, class: "btn btn-danger delete"
+          = link_to "編集", edit_task_path(task), class: "btn btn-primary mr-3 btn-sm"
+          = link_to "削除", task, method: :delete, data: { confirm: "タスク「#{task.name}」を削除します。よろしいですか?" }, class: "btn btn-danger delete btn-sm"
 .mt-3
   = paginate @tasks
 
