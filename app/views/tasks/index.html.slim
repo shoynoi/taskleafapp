@@ -33,8 +33,8 @@ table.table.bg-white.border
       tr id="task-#{task.id}"
         td.task_name
           .task-name__link = link_to task.name, task
-        td= task.due_date
-        td= task.created_at
+        td= format_due_date(task.due_date)
+        td= l task.created_at
         - status = task.status
         td.js-task-status(data-task-id="#{task.id}" data-status="#{status}")
         td.js-task-priority(data-task-id="#{task.id}" data-priority="#{task.priority}")

@@ -1,4 +1,12 @@
 ja:
+  date:
+    formats:
+      default: "%Y年%-m月%d日"
+      short: "%-m月%d日"
+  time:
+    formats:
+      default: "%Y年%m月%d日(%a) %H:%M"
+      short: "%Y/%m/%d %H:%M"
   activerecord:
     model:
       task: タスク
