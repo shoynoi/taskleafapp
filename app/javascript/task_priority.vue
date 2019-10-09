@@ -4,7 +4,7 @@
       <span>{{ labels[newPriority ] | noPriority }}</span>
     </div>
     <div v-else>
-      <select v-model="newPriority" @change="pushPriority" class="form-control form-control-sm" id="test-select-priority" v-focus>
+      <select v-model="newPriority" @change="pushPriority" class="form-control form-control-sm" id="test-select-priority" @blur="isEditPriority = false" v-focus>
         <option v-for="option in options" :key="option.id" :value="option.value">{{ option.label }}</option>
       </select>
     </div>
