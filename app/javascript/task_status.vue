@@ -1,8 +1,10 @@
 <template>
-  <td class="btn-group btn-group-sm">
-    <button class="btn" :class="statusName === 'pending' ? 'btn-info' : 'btn-outline-secondary'" :disabled="statusName === 'pending'" @click="pushStatus('pending')">未着手</button>
-    <button class="btn" :class="statusName === 'doing' ? 'btn-info' : 'btn-outline-secondary'" :disabled="statusName === 'doing'" @click="pushStatus('doing')">着手中</button>
-    <button class="btn" :class="statusName === 'done' ? 'btn-info' : 'btn-outline-secondary'" :disabled="statusName === 'done'" @click="pushStatus('done')">完了</button>
+  <td>
+    <div class="btn-group btn-group-sm">
+      <button class="btn" :class="statusName === 'pending' ? 'btn-info' : 'btn-outline-secondary'" :disabled="statusName === 'pending'" @click="pushStatus('pending')">未着手</button>
+      <button class="btn" :class="statusName === 'doing' ? 'btn-info' : 'btn-outline-secondary'" :disabled="statusName === 'doing'" @click="pushStatus('doing')">着手中</button>
+      <button class="btn" :class="statusName === 'done' ? 'btn-info' : 'btn-outline-secondary'" :disabled="statusName === 'done'" @click="pushStatus('done')">完了</button>
+    </div>
   </td>
 </template>
 

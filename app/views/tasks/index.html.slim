@@ -39,8 +39,8 @@ table.table.bg-white.border
         td.js-task-status(data-task-id="#{task.id}" data-status="#{status}")
         td.js-task-priority(data-task-id="#{task.id}" data-priority="#{task.priority}")
         td
-          = link_to "編集", edit_task_path(task), class: "btn btn-primary mr-3"
-          = link_to "削除", task, method: :delete, data: { confirm: "タスク「#{task.name}」を削除します。よろしいですか?" }, class: "btn btn-danger delete"
+          = link_to "編集", edit_task_path(task), class: "btn btn-primary mr-3 btn-sm"
+          = link_to "削除", task, method: :delete, data: { confirm: "タスク「#{task.name}」を削除します。よろしいですか?" }, class: "btn btn-danger delete btn-sm"
 .mt-3
   = paginate @tasks
 
