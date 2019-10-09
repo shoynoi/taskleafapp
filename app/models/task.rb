@@ -12,6 +12,8 @@ class Task < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
   scope :sort_by_due_date_not_null_asc, -> { order("due_date ASC NULLS LAST") }
   scope :sort_by_due_date_not_null_desc, -> { order("due_date DESC NULLS LAST") }
+  scope :sort_by_priority_asc, -> { order("priority ASC") }
+  scope :sort_by_priority_desc, -> { order("priority DESC") }
 
   def self.csv_attributes
     %w[name description created_at updated_at]

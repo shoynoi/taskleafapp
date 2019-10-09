@@ -26,7 +26,7 @@ table.table.bg-white.border
       th= sort_link(@q, :due_date_not_null, "期日")
       th= Task.human_attribute_name(:created_at)
       th= Task.human_attribute_name(:status)
-      th= Task.human_attribute_name(:priority)
+      th= sort_link(@q, :priority, "優先度")
       th
   tbody
     - @tasks.each do |task|
