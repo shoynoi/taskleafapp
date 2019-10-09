@@ -7,3 +7,10 @@ ul
   li
     | 詳しい説明
     = simple_format(@task.description)
+
+  li
+    | 期日
+    = @task.due_date
+  li
+    | 優先度
+    = @task.priority_i18n
