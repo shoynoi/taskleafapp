@@ -98,6 +98,32 @@ describe "タスク管理機能", type: :system do
       end
     end
 
+    describe "期日" do
+      context "期日に設定された年が現在の年と同じであるとき" do
+        let(:login_user) { user_a }
+        let!(:nearly_due_task) { FactoryBot.create(:task, name: "期日の近いタスクをテストする", due_date: "#{Time.current.year}-10-10", user: user_a) }
+
+        it "期日の月と日が表示される" do
+          visit tasks_path
+          within "#task-#{nearly_due_task.id}" do
+            expect(page).to have_content("10月10日")
+          end
+        end
+      end
+
+      context "期日に設定された年が現在の年より先であるとき" do
+        let(:login_user) { user_a }
+        let!(:distant_due_task) { FactoryBot.create(:task, name: "期日の遠いタスクをテストする", due_date: "2100-10-10", user: user_a) }
+
+        it "期日の年月日が表示される" do
+          visit tasks_path
+          within "#task-#{distant_due_task.id}" do
+            expect(page).to have_content("2100年10月10日")
+          end
+        end
+      end
+    end
+
     describe "タスク検索機能" do
       let(:login_user) { user_a }
 
