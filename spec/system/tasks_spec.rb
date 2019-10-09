@@ -84,6 +84,20 @@ describe "タスク管理機能", type: :system do
       end
     end
 
+    describe "優先度" do
+      let(:login_user) { user_a }
+
+      it "優先度の変更ができる" do
+        visit tasks_path
+        within "#task-#{task_a.id}" do
+          find("#test-view-priority").click
+          select "高", from: "test-select-priority"
+        end
+        sleep 0.5
+        expect(task_a.reload.priority).to eq "high"
+      end
+    end
+
     describe "タスク検索機能" do
       let(:login_user) { user_a }
 

@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   namespace :api do
     resources :tasks, only: [] do
       resource :status, only: [:show, :update], controller: 'tasks/statuses'
+      resource :priority, only: [:show, :update], controller: 'tasks/priorities'
     end
   end
   get '/login', to: 'sessions#new'
