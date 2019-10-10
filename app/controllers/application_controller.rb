@@ -9,6 +9,9 @@ class ApplicationController < ActionController::Base
   end
 
   def login_required
-    redirect_to login_path unless current_user
+    unless current_user
+      redirect_to login_path
+      flash[:danger] = "ログインしてください"
+    end
   end
 end

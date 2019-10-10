@@ -30,7 +30,8 @@ class Admin::UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if @user.update(user_params)
-      redirect_to admin_user_path(@user), notice: "ユーザー「#{@user.name}」を更新しました"
+      redirect_to admin_user_path(@user)
+      flash[:success] = "ユーザー「#{@user.name}」を更新しました"
     else
       render :edit
     end
@@ -39,7 +40,8 @@ class Admin::UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     @user.destroy
-    redirect_to admin_users_url, notice: "ユーザー「#{@user.name}」を削除しました"
+    redirect_to admin_users_url
+    flash[:success] = "ユーザー「#{@user.name}」を削除しました"
   end
 
   private
@@ -49,6 +51,9 @@ class Admin::UsersController < ApplicationController
   end
 
   def require_admin
-    redirect_to root_path unless current_user.admin?
+    unless current_user.admin?
+      redirect_to root_path
+      flash[:danger] = "権限がありません"
+    end
   end
 end

@@ -32,7 +32,8 @@ class TasksController < ApplicationController
 
     if @task.save
       TaskMailer.creation_email(@task, current_user).deliver_now
-      redirect_to @task, notice: "タスク「#{@task.name}」を登録しました。"
+      redirect_to @task
+      flash[:success] = "タスク「#{@task.name}」を登録しました。"
     else
       render :new
     end
@@ -43,7 +44,8 @@ class TasksController < ApplicationController
 
   def update
     if @task.update(task_params)
-      redirect_to tasks_url, notice: "タスク「#{@task.name}」を更新しました。"
+      redirect_to tasks_url
+      flash[:success] = "タスク「#{@task.name}」を更新しました。"
     else
       render :edit
     end
@@ -51,12 +53,14 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-    redirect_to tasks_url, notice: "タスク「#{@task.name}」を削除しました。"
+    redirect_to tasks_url
+    flash[:success] = "タスク「#{@task.name}」を削除しました。"
   end
 
   def import
     current_user.tasks.import(params[:file])
-    redirect_to tasks_url, notice: "タスクを追加しました"
+    redirect_to tasks_url
+    flash[:success] = "タスクを追加しました"
   end
 
   private

@@ -23,6 +23,7 @@ html
           - else
             li.nav-item= link_to "ログイン", login_path, class: "nav-link"
     .container
-      - if flash.notice.present?
-        .alert.alert-success.mt-2= flash.notice
+      - if flash.present?
+        - flash.each do |message_type, message|
+          = content_tag :div, message, class: "alert alert-#{message_type} mt-2"
       = yield
