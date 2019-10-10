@@ -31,7 +31,7 @@ table.table.bg-white.border
   tbody
     - @tasks.each do |task|
       tr id="task-#{task.id}"
-        td
+        td.test-task-name
           .task-name__link = link_to task.name, task
         td= format_due_date(task.due_date)
         td= l task.created_at

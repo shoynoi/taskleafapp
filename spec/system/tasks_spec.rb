@@ -42,7 +42,7 @@ describe "タスク管理機能", type: :system do
       it "デフォルトで作成日の降順で表示される" do
         visit tasks_path
         within "tbody" do
-          task_titles = all(".task_name").map(&:text)
+          task_titles = all(".test-task-name").map(&:text)
           expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
         end
       end
@@ -53,7 +53,7 @@ describe "タスク管理機能", type: :system do
           click_link "期日"
           sleep 0.5
           within "tbody" do
-            task_titles = all(".task_name").map(&:text)
+            task_titles = all(".test-task-name").map(&:text)
             expect(task_titles).to eq %w(最初のタスク 2番目のタスク 3番目のタスク)
           end
         end
@@ -64,7 +64,7 @@ describe "タスク管理機能", type: :system do
           click_link "期日"
           sleep 0.5
           within "tbody" do
-            task_titles = all(".task_name").map(&:text)
+            task_titles = all(".test-task-name").map(&:text)
             expect(task_titles).to eq %w(3番目のタスク 2番目のタスク 最初のタスク)
           end
         end
@@ -137,7 +137,7 @@ describe "タスク管理機能", type: :system do
         fill_in "タスク名", with: "買う"
         click_button "検索"
         within "tbody" do
-          task_titles = all(".task_name").map(&:text)
+          task_titles = all(".test-task-name").map(&:text)
           expect(task_titles).to contain_exactly("りんごを買う", "バナナを買う")
         end
       end
@@ -146,7 +146,7 @@ describe "タスク管理機能", type: :system do
         fill_in "登録日時", with: Time.zone.parse('2019-10-10')
         click_button "検索"
         within "tbody" do
-          task_titles = all(".task_name").map(&:text)
+          task_titles = all(".test-task-name").map(&:text)
           expect(task_titles).to eq %w(りんごを買う)
         end
       end
@@ -155,7 +155,7 @@ describe "タスク管理機能", type: :system do
         select "着手中", from: "ステータス"
         click_button "検索"
         within "tbody" do
-          task_titles = all(".task_name").map(&:text)
+          task_titles = all(".test-task-name").map(&:text)
           expect(task_titles).to eq %w(バナナを買う)
         end
       end
@@ -164,7 +164,7 @@ describe "タスク管理機能", type: :system do
         select "高", from: "優先度"
         click_button "検索"
         within "tbody" do
-          tasks_titles = all(".task_name").map(&:text)
+          tasks_titles = all(".test-task-name").map(&:text)
           expect(tasks_titles).to eq %w(バナナを買う)
         end
       end
@@ -176,7 +176,7 @@ describe "タスク管理機能", type: :system do
         select "高", from: "優先度"
         click_button "検索"
         within "tbody" do
-          task_titles = all(".task_name").map(&:text)
+          task_titles = all(".test-task-name").map(&:text)
           expect(task_titles).to eq %w(バナナを買う)
         end
       end
