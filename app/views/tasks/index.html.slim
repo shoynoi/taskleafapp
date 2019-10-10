@@ -1,7 +1,6 @@
-header.page-header
 = search_form_for @q, class: "mb-3 mt-3 bg-white p-3 rounded border" do |f|
   .form-row
-    .form-group.col-md-6
+    .form-group.col-md-5
       = f.label :name_cont, "タスク名"
       = f.search_field :name_cont, class: "form-control"
     .form-group.col-md-2
@@ -13,7 +12,8 @@ header.page-header
     .form-group.col-md-1
       = f.label :priority_eq, "優先度"
       = f.select :priority_eq, Task.priorities.map{ |k, v| [Task.priorities_i18n[k], v] }, { include_blank: "すべて" }, class: "form-control"
-  = f.submit class: "btn btn-outline-primary"
+    .form-group.col-md-1.align-self-end
+      = f.submit class: "btn btn-outline-primary"
 
 
 .mb-3
@@ -31,7 +31,7 @@ table.table.bg-white.border
   tbody
     - @tasks.each do |task|
       tr id="task-#{task.id}"
-        td.task_name
+        td
           .task-name__link = link_to task.name, task
         td= task.due_date
         td= task.created_at
