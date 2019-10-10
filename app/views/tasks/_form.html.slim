@@ -1,7 +1,8 @@
 - if task.errors.present?
-  ul#error_explanation
-    - task.errors.full_messages.each do |message|
-      li = message
+  .alert.alert-danger
+    ul#error_explanation
+      - task.errors.full_messages.each do |message|
+        li = message
 
 = form_with model: task, local: true do |f|
   .form-group

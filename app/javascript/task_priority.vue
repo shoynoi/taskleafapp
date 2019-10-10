@@ -1,6 +1,6 @@
 <template>
-  <td>
-    <div v-if="!isEditPriority" @click="isEditPriority = true" id="test-view-priority">
+  <td class="task-name">
+    <div v-if="!isEditPriority" @click="isEditPriority = true" id="test-view-priority" class="task-priority-view">
       <span>{{ labels[newPriority ] | noPriority }}</span>
     </div>
     <div v-else>
